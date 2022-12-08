@@ -123,12 +123,13 @@ class GremlinAPI(object):
             team_id: str = cls._info_if_not_param("teamId", **kwargs)
         else:
             team_id = cls._info_if_not_param("team_id", **kwargs)
-        if not team_id and type(config.team_id) is str:
-            team_id = config.team_id  # type: ignore
-        else:
-            error_msg: str = f"Endpoint requires a team_id or teamId, none supplied"
-            log.error(error_msg)
-            raise GremlinParameterError(error_msg)
+        if not team_id:
+            if type(config.team_id) is str:
+                team_id = config.team_id  # type: ignore
+            else:
+                error_msg: str = f"Endpoint requires a team_id or teamId, none supplied"
+                log.error(error_msg)
+                raise GremlinParameterError(error_msg)
         endpoint = cls._add_query_param(endpoint, "teamId", team_id)
         return endpoint
 
